@@ -5,7 +5,7 @@
 <!ENTITY author    "dmacias72">
 <!ENTITY version   "2018.01.06">
 <!ENTITY launch    "Settings/NUTsettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/beta">
 <!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
@@ -115,9 +115,9 @@ dependency files
 <!--
 The 'nut-package' file.
 -->
-<FILE Name="&plgPATH;/nut-2.7.4-x86_64-2_slonly.txz" Min="6.1" Run="upgradepkg --install-new">
-<URL>&pkgURL;/nut-2.7.4-x86_64-2_slonly.txz</URL>
-<MD5>ae46b12abd4add9014e49e24acb23e24</MD5>
+<FILE Name="&plgPATH;/nut-2.7.5pre-x86_64-2.txz" Min="6.1" Run="upgradepkg --install-new">
+<URL>&pkgURL;/nut-2.7.5pre-x86_64-2.txz</URL>
+<MD5>24702ef930855db3432ed9ee73e93d42</MD5>
 </FILE>
 
 <FILE Name="&plgPATH;/net-snmp-5.7.3-x86_64-4.txz" Min="6.1" Run="upgradepkg --install-new">
