@@ -38,7 +38,7 @@ if (file_exists('/var/run/nut/upsmon.pid')) {
       $status[0] = $val ? (stripos($val,'online')===false ? "<td $red>$val</td>" : "<td $green>$val</td>") : "<td $orange>Refreshing...</td>";
       break;
     case 'battery.charge':
-      $status[1] = strtok($val,' ')<=10 ? "<td $red>".intval($val). "&thinsp;%</td>" : "<td $green>".intval($val). "&thinsp;%</td>";
+      $status[1] = strtok($val,' ')<=10 ? "<td $red>".intval($val)." %</td>" : "<td $green>".intval($val)." %</td>";
       break;
     case $nut_runtime:
       $runtime   = gmdate("H:i:s", $val);
@@ -55,7 +55,7 @@ if (file_exists('/var/run/nut/upsmon.pid')) {
       break;
     case 'ups.load':
       $load      = strtok($val,' ');
-      $status[5] = $load>=90 ? "<td $red>".intval($val). "&thinsp;%</td>" : "<td $green>".intval($val). "&thinsp;%</td>";
+      $status[5] = $load>=90 ? "<td $red>".intval($val). " %</td>" : "<td $green>".intval($val). " %</td>";
       break;
     }
     if ($all) {
@@ -83,19 +83,19 @@ if (file_exists('/var/run/nut/upsmon.pid')) {
     $realPower = $realPowerNominal && $load ? round($realPowerNominal * $load * 0.01) : -1;
 
   if ($powerNominal > 0 && $realPowerNominal > 0)
-    $status[3] = "<td " . ($load >= 90 ? $red : $green) . ">$realPowerNominal&thinsp;W ($powerNominal&thinsp;VA)</td>";
+    $status[3] = "<td " . ($load >= 90 ? $red : $green) . ">$realPowerNominal W ($powerNominal VA)</td>";
   else if ($powerNominal > 0)
-    $status[3] = "<td " . ($load >= 90 ? $red : $green) . ">$powerNominal&thinsp;VA</td>";
+    $status[3] = "<td " . ($load >= 90 ? $red : $green) . ">$powerNominal VA</td>";
   else if ($realPowerNominal > 0)
-    $status[3] = "<td " . ($load >= 90 ? $red : $green) . ">$realPowerNominal&thinsp;W</td>";
+    $status[3] = "<td " . ($load >= 90 ? $red : $green) . ">$realPowerNominal W</td>";
 
   # display apparent power and real power if exists
   if ($apparentPower >= 0 && $realPower >= 0)
-    $status[4] = "<td " . ($realPower == 0 || $apparentPower == 0 ? $red : $green) . ">$realPower&thinsp;W ($apparentPower&thinsp;VA)</td>";
+    $status[4] = "<td " . ($realPower == 0 || $apparentPower == 0 ? $red : $green) . ">$realPower W ($apparentPower VA)</td>";
   else if ($apparentPower >= 0)
-    $status[4] = "<td " . ($apparentPower == 0 ? $red : $green) . ">$apparentPower&thinsp;VA</td>";
+    $status[4] = "<td " . ($apparentPower == 0 ? $red : $green) . ">$apparentPower VA</td>";
   else if ($realPower >= 0)
-    $status[4] = "<td " . ($realPower == 0 ? $red : $green) . ">$realPower&thinsp;W</td>";
+    $status[4] = "<td " . ($realPower == 0 ? $red : $green) . ">$realPower W</td>";
 
   # compute power factor from ups.realpower.nominal and ups.power.nominal if available
   if ($realPowerNominal > 0 && $powerNominal > 0) {
