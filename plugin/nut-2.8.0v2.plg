@@ -1,0 +1,323 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "nut">
+<!ENTITY author    "SimonFair">
+<!ENTITY version   "2023.07.24">
+<!ENTITY launch    "Settings/NUTsettings">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/ssl-and-upgrade">
+<!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0v2.plg">
+<!ENTITY pkgURL    "&gitURL;/packages">
+<!ENTITY plgPATH   "/boot/config/plugins/&name;">
+<!ENTITY plgNAME   "&name;-plugin-&version;-x86_64-1">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;">
+
+<CHANGES>
+##&name;
+###2023.07.24
+- fix override realpower if realpower nominal set manually
+- simplification of realpower/apparent power if value set manually
+- used   to separate number and unit (W/VA)
+- remove obsolete lowbatt fail-safe
+        Thanks to forum member Peuuuur Noel and Rysz for the PRs.
+###2023.07.23a
+- fix: updated code for better calculation and display (in settings/footer/dashboard) between apparent power, real/true power and data available from NUT
+- add: display power factor in settings page
+- add: use ups.realpower if available
+
+          Thanks to forum member Peuuuur Noel  for the PR.
+###2023.07.22
+- fix: persist config files when rebooting
+- add: implement lowbatt event fail-safe in settings
+- add: always pull-in latest config files on reinstall/upgrade
+- add: implement battery replacement notification in settings
+
+        Thanks to forum member Rysz for the PR.
+###2022.03.20
+-fix for filetree top level
+-update nut footer
+###2021.01.08
+- fix plugin package permissions
+- cybrnook -update help text to reflect minutes
+###2020.05.16
+- gfjardim - Show dashboard even if footer is disabled
+###2020.05.11
+- update nut package for 6.8
+###2020.03.17
+- gfjardim - added footer and dashboard plus many other tweaks
+###2019.02.03
+- update all icons to fa icons
+- fix editor font in black theme
+###2019.01.24
+- update settings icon to fa font
+###2018.11.25
+- add autov to css and js
+- build nut package from usblib-1.0 branch
+- remove support link from readme
+###2018.05.09
+- fix Autodetect
+- fix null port error
+###2018.04.29
+- fix rc script interfering with cupsd
+- fix Run time in red only when on battery thanks @realies
+- compile nut-2.7.4.20180429 libusb 1.0+0.1 branch for 6.5 added patch for wait and retry
+###2018.01.16
+- tweak notification event and subject
+###2018.01.14
+- fix nut power showing 0
+###2018.01.09
+- update nut package to 2.7.4 2017.11.29 commit fd7189d
+- revert Eaton use-case since it is included in nut package
+- add ups va and watt capacity inputs for ups that do not present real power nominal
+###2018.01.06
+- add Eaton use-case to improve load accuracy thanks @realies
+###2018.01.03
+- fix load for ups with ups.power.nominal vs ups.realpower.nominal
+###2017.11.29
+- fix permissions so nut conf are not world readable
+- fix nut-scanner options, only scan usb for auto config
+###2017.11.26
+- fix plugin install service starting when disabled
+###2017.11.25
+- fix snmp port input box length and add ip mask
+###2017.11.03
+- update killpower flag
+- update permissions and security for nut configs
+- change username and password variables
+- add slave user and password
+###2017.10.28
+- downgrade nut package to 2.7.4 due to usb resets in 6.4rc10b
+###2017.10.10
+- fix ipaddr filter
+- update input masks for ipaddr, name and username
+###2017.10.08a
+- fix move old pids to new location
+- compile nut package to latest commit 2017.09.21
+- fix: new nut package uses /etc/nut and /var/run/nut
+###2017.10.05
+- fix add username and password to upsd users
+- add autorefresh to editor to fix line number placement
+- move cdnjs to local
+- update support for new themes
+###2017.09.17
+- add ability to change UPS Monitor Name, User and Password
+- update icons
+###2017.06.17a
+- add support for 6.4 themes
+###2017.06.04
+- add net-snmp package
+###2017.05.27
+- add autodetection for UPS
+- fix ip mask
+###2017.05.26
+- add master/slave options
+- fix runtime display format
+###2017.05.24
+- add dropdown options for battery and timers
+- add killpower flag condition to shutdown script
+###2017.05.22
+- fix shutdown scripts
+- move default nut conf files
+###2017.05.20
+- fix manual config  settings
+###2017.05.19
+- fix reload button
+- add start conditions to rc script
+###2017.05.17
+- add manual mode, reload and config editor to settings page
+- reformat settings page, hide unused vars
+- add vars, rewrite, combine and move scripts
+- add snmp settings from Ambrotos fork - untested
+- add UPS summary, UPS details page and dashboard page
+- add dynamix plugin api
+- remove depreciated code
+- restructure and repackage plugin
+- rename nut plugin package to difer from nut package
+
+###2015.09.19###
+- UPS statistics now auto updates(every two seconds)
+
+###2015.08.24###
+- added launch from plugins(saarg)
+
+###2015.08.23###
+- added blazer_ser to drivers
+
+###2015.08.23###
+- Public Release
+- Fix, Restart on upgrades
+
+###2015.08.22###
+- Uninstall fixes
+- Fix autorestart after upgrade
+- Make USB drivers selectable
+- Add shutdown on battery levels
+- Remove user/password and hardcode them (see plugin help)
+- Moved scripts to plugin folder for 6.1 (ln -s rc.nut)
+
+###2015.08.21###
+- Initial Release
+- Test Version (plg)
+</CHANGES>
+
+<!--
+dependency files
+-->
+
+<!--
+The 'nut-package' file.
+-->
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.ssl3.txz" Min="6.13" Run="upgradepkg --install-new">
+<URL>&pkgURL;/nut-2.8.0-x86_64-1.txz</URL>
+<MD5>39d3f1dfb55ae931e7895430d29c643a</MD5>
+</FILE>
+
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.ssl11.txz" Min="6.10" Max="6.12.99" Run="upgradepkg --install-new">
+<URL>&pkgURL;/nut-2.8.0-x86_64-1.txz</URL>
+<MD5>e90384e13a83b897c1b154a36fc779f4</MD5>
+</FILE>
+
+<!--
+The 'plugin' package file.
+-->
+<FILE Name="&plgPATH;/&plgNAME;.txz">
+<URL>&gitURL;/archive/&plgNAME;.txz</URL>
+</FILE>
+
+<!--
+The 'plugin' package MD5 hash.
+-->
+<FILE Name="&plgPATH;/&plgNAME;.md5">
+<URL>&gitURL;/archive/&plgNAME;.md5</URL>
+</FILE>
+
+<!-- WORKAROUND -->
+<FILE Name="/tmp/start_&name;" Mode="0770">
+<INLINE>
+#!/bin/bash
+CONFIG=&plgPATH;/&name;.cfg
+
+# read our configuration
+if [ -e "$CONFIG" ]; then
+    source "$CONFIG"
+fi
+if [ "$SERVICE" == "enable" ]; then
+    /etc/rc.d/rc.nut start
+fi
+</INLINE>
+</FILE>
+
+<!--
+The 'install' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+#Verify Unraid Version
+source /etc/unraid-version
+if [[ ${version:0:3} == 6.0 ]]; then
+    echo "Unraid version 6.1 or higher is required"
+    exit 1
+fi
+
+# Verify and install plugin package
+sum1=$(/usr/bin/md5sum &plgPATH;/&plgNAME;.txz)
+sum2=$(/usr/bin/cat &plgPATH;/&plgNAME;.md5)
+if [ "${sum1:0:32}" != "${sum2:0:32}" ]; then
+    echo "Wrong 'plugin' package md5 hash."
+    rm &plgPATH;/&plgNAME;.txz
+    rm &plgPATH;/&plgNAME;.md5
+    exit 1
+else
+    # nut-2.7.4 and nut plugin expects:
+    #   Config: /etc/nut
+    #   Pid   : /var/run/nut/upsmon.pid
+
+    # nut-2.8.0 expects
+    #   Config: /etc/ups
+    #   Pid   : /var/run/upsmon.pid
+
+    if [ ! -d /etc/nut ]; then
+        # Link nut-2.8.0 config to nut-2.7.4 config
+        mkdir /etc/nut
+        cp /etc/ups/* /etc/nut
+        rm -rf /etc/ups
+        ln -s /etc/nut /etc/ups
+        # Link nut-2.7.4 pid to nut-2.8.0 pid
+        mkdir /var/run/nut
+        ln -s /var/run/upsmon.pid /var/run/nut/upsmon.pid
+    fi
+
+    # upgrade plugin package
+    upgradepkg --install-new &plgPATH;/&plgNAME;.txz
+
+    # Stop service
+    echo "stopping services..."
+    /etc/rc.d/rc.nut stop 2>/dev/null
+
+    # start network ups tools
+    echo "checking network ups tools configuration..."
+    at -M -f /tmp/start_&name; now 2>/dev/null
+
+    sleep 1
+
+    rm -f /tmp/start_&name;
+
+    # Cleaning old plugin source files
+    find &plgPATH;/ -type f -iname "&name;-plugin*.txz" ! -iname "*&version;*" -delete
+    find &plgPATH;/ -type f -iname "&name;-plugin*.md5" ! -iname "*&version;*" -delete
+
+    echo ""
+    echo "-----------------------------------------------------------"
+    echo " &name; has been installed."
+    echo " Copyright 2015, macester"
+    echo " Copyright 2020, gfjardim"
+    echo " Copyright 2015-2022, &author;"
+    echo " Version: &version;"
+    echo "-----------------------------------------------------------"
+    echo ""
+
+fi
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+# Stop service
+/etc/rc.d/rc.nut stop 2>/dev/null
+
+# check if net-snmp is used by another plugin
+if [ `find /boot/config/plugins/*.plg -type f ! -iname "*&name;.plg*" | xargs grep "net-snmp" -sl` ]; then
+    echo "net-snmp inuse by another plugin"
+    rm -f &plgPATH;/net-snmp*.txz
+fi
+
+removepkg &plgPATH;/*.txz
+rm -rf &emhttp;
+rm -rf &plgPATH;/ups
+rm -f &plgPATH;/*.txz \
+    &plgPATH;/*.md5
+
+# Remove links for nut-2.8.0 vs nut-2.7.4
+rm -rf /etc/nut
+rm /etc/ups
+rm -rf /var/run/nut
+
+echo ""
+echo "-----------------------------------------------------------"
+echo " &name; has been removed."
+echo " Copyright 2015, macester"
+echo " Copyright 2020, gfjardim"
+echo " Copyright 2017-2022, &author;"
+echo " Version: &version;"
+echo "-----------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+</PLUGIN>
