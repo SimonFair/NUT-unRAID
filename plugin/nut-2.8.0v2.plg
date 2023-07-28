@@ -172,12 +172,12 @@ The 'nut-package' file.
 -->
 <FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.ssl3.txz" Min="6.13" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.8.0-x86_64-1.ssl3.txz</URL>
-
+<MD5>39d3f1dfb55ae931e7895430d29c643a</MD5>
 </FILE>
 
 <FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.ssl11.txz" Min="6.10" Max="6.12.99" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.8.0-x86_64-1.ssl11.txz</URL>
-
+<MD5>e90384e13a83b897c1b154a36fc779f4</MD5>
 </FILE>
 
 <!--
