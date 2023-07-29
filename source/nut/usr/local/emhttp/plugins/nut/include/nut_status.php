@@ -13,13 +13,6 @@
  */
 require_once '/usr/local/emhttp/plugins/nut/include/nut_config.php';
 
-$state = [
-  'OL'       => 'Online',
-  'OB'       => 'On battery',
-  'OL LB'    => 'Online low battery',
-  'OB LB'    => 'Low battery'
-];
-
 $red    = "class='red-text'";
 $green  = "class='green-text'";
 $orange = "class='orange-text'";
@@ -28,14 +21,40 @@ $all    = $_GET['all']=='true';
 $result = [];
 
 if (file_exists('/var/run/nut/upsmon.pid')) {
+  
   exec("/usr/bin/upsc ".escapeshellarg($nut_name)."@$nut_ip 2>/dev/null", $rows);
+  
+  if ($_GET['diagsave'] == "true") {
+
+  $diagarray = $rows;
+  
+  array_walk($diagarray, function(&$var) {
+    if (preg_match('/^(device|ups)\.(serial|macaddr):/i', $var, $matches)) {
+      $var = $matches[1] . '.' . $matches[2] . ': REMOVED';
+    }
+  });
+
+  $diagstring = implode("\n",$diagarray);
+  header('Content-Disposition: attachment; filename="nut-diagnostics.dev"');
+  header('Content-Type: text/plain');
+  header('Content-Length: ' . strlen($diagstring));
+  header('Connection: close');
+  die($diagstring);
+
+  }
+  
+  $upsStatus = nut_ups_status($rows);
+
   for ($i=0; $i<count($rows); $i++) {
     $row = array_map('trim', explode(':', $rows[$i], 2));
     $key = $row[0];
-    $val = strtr($row[1], $state);
+    $val = $row[1];
     switch ($key) {
     case 'ups.status':
-      $status[0] = $val ? (stripos($val,'online')===false ? "<td $red>$val</td>" : "<td $green>$val</td>") : "<td $orange>Refreshing...</td>";
+      if ($upsStatus['fulltext'])
+        $status[0] = '<td' . (isset($nut_msgSeverity[$upsStatus['severity']]) ? ' class="' . $nut_msgSeverity[$upsStatus['severity']]['css_class'] . '"' : '') . '>' . implode(' - ', $upsStatus['fulltext']) . '</td>';
+      else
+        $status[0] = '<td class="' . $nut_msgSeverity[1]['css_class'] . '">Refreshing...</td>';
       break;
     case 'battery.charge':
       $status[1] = strtok($val,' ')<=10 ? "<td $red>".intval($val). "&thinsp;%</td>" : "<td $green>".intval($val). "&thinsp;%</td>";
@@ -65,7 +84,7 @@ if (file_exists('/var/run/nut/upsmon.pid')) {
     }
   }
 
-  # if manual, override values
+  # if manual, overwrite values
   if ($nut_power == 'manual') {
     $powerNominal = intval($nut_powerva);
     $realPowerNominal = intval($nut_powerw);

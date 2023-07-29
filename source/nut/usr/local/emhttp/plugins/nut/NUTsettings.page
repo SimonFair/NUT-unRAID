@@ -377,10 +377,14 @@ require_once '/usr/local/emhttp/plugins/nut/include/nut_config.php'; ?>
         <dd>
             <select class="" name="FOOTER_STYLE" size="1">
                 <?=mk_option($nut_footer_style, '0', 'Default');?>
-                <?=mk_option($nut_footer_style, '1', 'Small');?>
+                <?=mk_option($nut_footer_style, '1', 'Minimal');?>
             </select>
         </dd>
     </dl>
+
+    <blockquote class="inline_help">
+        <p>Tooltip disabled on Minimal style.</p>
+    </blockquote>
 
     <dl>
         <dt>Display Page Refresh:</dt>

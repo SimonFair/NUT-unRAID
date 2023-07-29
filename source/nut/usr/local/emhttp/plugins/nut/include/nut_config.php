@@ -32,4 +32,28 @@ $nut_refresh      = isset($nut_cfg['REFRESH'])      ? htmlspecialchars($nut_cfg 
 $nut_interval     = isset($nut_cfg['INTERVAL'])     ? intval($nut_cfg['INTERVAL'])                : 15 ;
 $nut_runtime      = isset($nut_cfg['RUNTIME'])      ? htmlspecialchars($nut_cfg ['RUNTIME'])      : 'battery.runtime';
 $nut_running      = (intval(trim(shell_exec( "[ -f /proc/`cat /var/run/nut/upsmon.pid 2> /dev/null`/exe ] && echo 1 || echo 0 2> /dev/null" ))) === 1 );
+
+# debug constant to overwrite ups.status
+// define('NUT_STATUS_DEBUG', 'OB DISCHRG BYPASS CAL');
+$nut_states = [
+    'OL'      => ['severity' => 0, 'msg' => 'On line'],
+    'OB'      => ['severity' => 0, 'msg' => 'On battery'],
+    'LB'      => ['severity' => 1, 'msg' => 'Low battery'],
+    'HB'      => ['severity' => 0, 'msg' => 'High battery'],
+    'RB'      => ['severity' => 2, 'msg' => 'The battery needs to be replaced'],
+    'CHRG'    => ['severity' => 0, 'msg' => 'The battery is charging'],
+    'DISCHRG' => ['severity' => 1, 'msg' => 'The battery is discharging'],
+    'BYPASS'  => ['severity' => 1, 'msg' => 'UPS bypass circuit is active (no battery protection is available)'],
+    'CAL'     => ['severity' => 0, 'msg' => 'UPS is currently performing runtime calibration (on battery)'],
+    'OFF'     => ['severity' => 1, 'msg' => 'UPS is offline and is not supplying power to the load'],
+    'OVER'    => ['severity' => 2, 'msg' => 'UPS is overloaded'],
+    'TRIM'    => ['severity' => 1, 'msg' => 'UPS is trimming incoming voltage (called "buck" in some hardware)'],
+    'BOOST'   => ['severity' => 1, 'msg' => 'UPS is boosting incoming voltage'],
+    'FSD'     => ['severity' => 1, 'msg' => 'Forced Shutdown'],
+];
+$nut_msgSeverity = [
+    0 => ['label' => 'info',    'css_class' => 'green-text'],
+    1 => ['label' => 'warning', 'css_class' => 'orange-text'],
+    2 => ['label' => 'error',   'css_class' => 'red-text'],
+];
 ?>

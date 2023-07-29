@@ -205,7 +205,7 @@ write_config() {
         mkdir $PLGPATH/ups
     fi
 	
-    cp -f /etc/nut/* $PLGPATH/ups
+    cp -f /etc/nut/* $PLGPATH/ups >/dev/null 2>&1
  
     # update permissions
     if [ -d /etc/nut ]; then
@@ -214,6 +214,8 @@ write_config() {
         chmod 640 /etc/nut/*
         chown root:nut /var/run/nut
         chmod 0770 /var/run/nut
+        chown root:nut /var/state/ups
+        chmod 0770 /var/state/ups
         #chown -R 218:218 /etc/nut
         #chmod -R 0644 /etc/nut
     fi

@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nut">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.07.24">
+<!ENTITY version   "2023.07.26">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/master">
 <!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0.plg">
@@ -17,7 +17,20 @@
 
 <CHANGES>
 ##&name;
-###2023.07.24
+###2023.07.26
+###2023.07.26
+- fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
+- fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
+- fix: old installation remnants cause updating or transitioning to another nut package on running instance to fail
+- fix: fix a permissions issue causing some drivers in 2.8.0 not to have access to their required folders
+- new: add button for users to be able to save their UPS details into a dummy-ups compliant diagnostics file
+  this file can then be uploaded on the forums and given to the developers in case problems with the plugin arise
+  thanks to @Peuuuur-Noel for the improvements to the privacy of the exported files (removing serial, macaddr)
+- Looks like the Tooltipster js lib was broken due to duplicate "copyright" id in footer code.
+- fix Removed #copyright from footer and applied CSS directly to the element.
+
+        Thanks to forum member Peuuuur Noel and Rysz for the PRs.
+###2023.07.24a
 - fix override realpower if realpower nominal set manually
 - simplification of realpower/apparent power if value set manually
 - used   to separate number and unit (W/VA)
@@ -36,6 +49,12 @@
 - add: implement battery replacement notification in settings
 
         Thanks to forum member Rysz for the PR.
+###2023.06.03
+- Add Small footer style thanks ich777 for the PR.
+###2023.02.14
+-6.12 Dashboard support
+-PHP8 fixes
+-Refresh option.
 ###2022.03.20
 -fix for filetree top level
 -update nut footer
@@ -249,10 +268,16 @@ sum1=$(/usr/bin/md5sum &plgPATH;/&plgNAME;.txz)
 sum2=$(/usr/bin/cat &plgPATH;/&plgNAME;.md5)
 if [ "${sum1:0:32}" != "${sum2:0:32}" ]; then
     echo "Wrong 'plugin' package md5 hash."
-    rm &plgPATH;/&plgNAME;.txz
-    rm &plgPATH;/&plgNAME;.md5
+    rm -f &plgPATH;/&plgNAME;.txz
+    rm -f &plgPATH;/&plgNAME;.md5
     exit 1
 else
+    # if upgrading on live system, stop the services here
+    # to release any remaining file locks before patching
+    if [ -x /etc/rc.d/rc.nut ]; then
+        /etc/rc.d/rc.nut stop 2>/dev/null
+    fi
+
     # nut-2.7.4 and nut plugin expects:
     #   Config: /etc/nut
     #   Pid   : /var/run/nut/upsmon.pid
@@ -264,12 +289,12 @@ else
     if [ ! -d /etc/nut ]; then
         # Link nut-2.8.0 config to nut-2.7.4 config
         mkdir /etc/nut
-        cp /etc/ups/* /etc/nut
+        cp -f /etc/ups/* /etc/nut
         rm -rf /etc/ups
-        ln -s /etc/nut /etc/ups
+        ln -sf /etc/nut /etc/ups
         # Link nut-2.7.4 pid to nut-2.8.0 pid
         mkdir /var/run/nut
-        ln -s /var/run/upsmon.pid /var/run/nut/upsmon.pid
+        ln -sf /var/run/upsmon.pid /var/run/nut/upsmon.pid
     fi
 
     # upgrade plugin package
@@ -327,7 +352,13 @@ rm -f &plgPATH;/*.txz \
 
 # Remove links for nut-2.8.0 vs nut-2.7.4
 rm -rf /etc/nut
-rm /etc/ups
+rm -f /etc/ups
+rm -rf /var/run/nut
+
+# clean up folders after the removed installation
+# in case of re-installation of package on live system
+rm -rf /etc/nut
+rm -rf /etc/ups
 rm -rf /var/run/nut
 
 echo ""

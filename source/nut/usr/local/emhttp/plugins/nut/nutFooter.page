@@ -40,6 +40,7 @@ EOT;
 ?>
 
 <?require_once '/usr/local/emhttp/plugins/nut/include/nut_config.php';?>
+<?$config = parse_ini_file('/boot/config/plugins/nut/nut.cfg');?>
 <?if ($nut_footer == "enable" && $nut_running):?>
 <?$update= $nut_refresh == "enable" ? true : false;?>
 <style type="text/css">
@@ -64,6 +65,13 @@ EOT;
 .fa-battery-discharging:before {
   content: "\f240";
   animation: 2s battery-discharging infinite;
+}
+@keyframes fa-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.fa-blink {
+  animation: fa-blink .6s linear infinite;
 }
 @keyframes ring{
   0%{-webkit-transform:rotate(-15deg);transform:rotate(-15deg)}
@@ -93,6 +101,15 @@ EOT;
   -webkit-animation:ring 3s ease infinite;
   animation:ring 3s ease infinite
 }
+#nut_footer {
+  float: right;
+  margin-right: 6px;
+}
+#nut_footer.minimal {
+  font-family: bitstream;
+  font-size: 1.1rem;
+  padding-right: 10px;
+}
 </style>
 <script type="text/javascript">
   function getNUTfooter() {
@@ -119,7 +136,10 @@ EOT;
 
   $(function()
     {
-      footer = $("<span id='nut_footer'></span>").insertAfter("div#footer > span#copyright").css("float","right").css("margin-right", "6px");
+      var footer = $("<span id='nut_footer'></span>").insertAfter("div#footer > span#copyright");
+      <?if ($config['FOOTER_STYLE'] == 1): ?>
+        footer.addClass('minimal');
+      <?endif;?>
       getNUTfooter();
       $('body').on('mouseenter', '.tooltip-nut', function()
       {
@@ -138,7 +158,6 @@ EOT;
               instance.content($(helper.origin).attr("data"));
             }
           }).tooltipster('open');
-
         }
       });
     }
@@ -150,16 +169,15 @@ EOT;
 <script type="text/javascript">
   function UPSNUTArray() {
     $.get('/plugins/nut/include/nut_status.php',{all:'false'},function(d) {
-      var data = d.replace(/<\/?tr>/g,'').replace(/<td/g,'<span').replace(/td>/g,'span>;').split(';')
-
-	  $('#tblUPSNUTDash').find('tr.updated').remove();
+      var data = d.replace(/<\/?tr>/g,'').replace(/<td/g,'<span').replace(/td>/g,'span>').split('</span>');
+      $('#tblUPSNUTDash').find('tr.updated').remove();
 
       $('#tblUPSNUTDash').append('<tr class="updated"><td>'+
-        "<tr class='updated'><td><span class='w36 ups'>UPS status:</span><span class='nut_status'>"+data[0]+"</span></td></tr>" +
+        "<tr class='updated'><td style='display: flex;'><span class='w36 ups'>UPS status:</span><span class='nut_status' style='flex: 1; white-space: normal;'>"+data[0]+"</span></td></tr>" +
         "<tr class='updated'><td><span class='w36 ups'>Battery charge:</span><span class='nut_bcharge'>"+data[1]+"</span></td></tr>" +
         "<tr class='updated'><td><span class='w36 ups'>Runtime left:</span><span class='nut_timeleft'>"+data[2]+"</span></td></tr>" +
         "<tr class='updated'><td><span class='w36 ups'>Nominal power:</span>"+data[3]+"</td></tr>");
-    $("#tblUPSNUTDash").find('.nut_loadpct').html(data[5]+' - '+data[4]);    
+    $("#tblUPSNUTDash").find('.nut_loadpct').html(data[5]+' - '+data[4]);
     setTimeout(UPSNUTArray, <?=($nut_interval * 1000)?>);
   }) ;
 };
@@ -167,7 +185,7 @@ EOT;
 $(function(){
   UPSNUTArray();
 });
-</script> 
+</script>
 <?endif;?>
 
 
@@ -177,7 +195,7 @@ $(function(){
 <script type="text/javascript">
   function getNUTDashboard() {
     $.get('/plugins/nut/include/nut_status.php',{all:'false'},function(d) {
-      var data = d.replace(/<\/?tr>/g,'').replace(/<td/g,'<span').replace(/td>/g,'span>;').split(';');
+      var data = d.replace(/<\/?tr>/g,'').replace(/<td/g,'<span').replace(/td>/g,'span>').split('</span>');
       $("#db-box1").find('.nut_status').html(data[0]);
       $("#db-box1").find('.nut_bcharge').html(data[1]);
       $("#db-box1").find('.nut_timeleft').html(data[2]);
