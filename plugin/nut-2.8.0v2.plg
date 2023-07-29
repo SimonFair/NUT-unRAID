@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nut">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.07.24">
+<!ENTITY version   "2023.07.26">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/ssl-and-upgrade">
 <!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0v2.plg">
