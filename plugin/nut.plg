@@ -6,7 +6,7 @@
 <!ENTITY version   "2023.07.30">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/ssl-and-upgrade">
-<!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0v2.plg">
+<!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 <!ENTITY plgNAME   "&name;-plugin-&version;-x86_64-1">
@@ -17,7 +17,7 @@
 
 <CHANGES>
 ##&name;
-###2023.07.26
+###2023.07.30
 - fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
 - fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
 - fix: old installation remnants cause updating or transitioning to another nut package on running instance to fail
@@ -272,8 +272,8 @@ else
     upgradepkg --install-new &plgPATH;/&plgNAME;.txz
 
     # start network ups tools
-    #echo "checking network ups tools configuration..."
-    #at -M -f /tmp/start_&name; now 2>/dev/null
+    echo "checking network ups tools configuration..."
+    at -M -f /tmp/start_&name; now 2>/dev/null
 
     sleep 1
 
