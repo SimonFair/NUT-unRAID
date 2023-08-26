@@ -189,14 +189,14 @@ dependency files
 <!--
 The 'nut-package' file.
 -->
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl11.txz" Min="6.13" Run="upgradepkg --install-new">
-<URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl11.txz</URL>
-<MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
-</FILE>
-
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl3.txz" Min="6.10" Max="6.12.99" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl3.txz" Min="6.13" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl3.txz</URL>
 <MD5>f49b17d960920c6970ad3787a55811f6</MD5>
+</FILE>
+
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl11.txz" Min="6.10" Max="6.12.99" Run="upgradepkg --install-new">
+<URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl11.txz</URL>
+<MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
 </FILE>
 
 <FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.txz" Min="6.10" Run="upgradepkg --install-new">
