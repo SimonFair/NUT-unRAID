@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nut">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.07.26">
+<!ENTITY version   "2023.08.26">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/master">
 <!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0.plg">
@@ -199,12 +199,7 @@ The 'nut-package' file.
 <MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
 </FILE>
 
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.txz" Min="6.10" Run="upgradepkg --install-new">
-<URL>&pkgURL;/nut-2.8.0-x86_64-1.txz</URL>
-<MD5>2c7a37ac49a3c752536b7f4f43777cc2</MD5>
-</FILE>
-
-<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Max ="6.9.99" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.7.4.20200318-x86_64-1.txz</URL>
 <MD5>52de2867d6b8f6bc1a98a45870b05420</MD5>
 </FILE>
