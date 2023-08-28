@@ -285,6 +285,9 @@ else
         /etc/rc.d/rc.nut stop 2>/dev/null
     fi
 
+    # Upgrade Nut package to latest 2.8 
+    upgradepkg --install-new &plgPATH;/nut-2.8.0-x86_64-2.txz
+
     # nut-2.7.4 and nut plugin expects:
     #   Config: /etc/nut
     #   Pid   : /var/run/nut/upsmon.pid
@@ -303,13 +306,6 @@ else
         mkdir /var/run/nut
         ln -sf /var/run/upsmon.pid /var/run/nut/upsmon.pid
     fi
-
-    # Stop service
-    #echo "stopping services..."
-    #/etc/rc.d/rc.nut stop 2>/dev/null
-
-    # Upgrade Nut package to latest 2.8 
-    upgradepkg --install-new &plgPATH;/nut-2.8.0-x86_64-2.txz
 
     # upgrade plugin package
     upgradepkg --install-new &plgPATH;/&plgNAME;.txz
