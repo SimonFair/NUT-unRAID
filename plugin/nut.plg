@@ -253,6 +253,7 @@ fi
 if [ "$SERVICE" == "enable" ]; then
     /etc/rc.d/rc.nut start
 fi
+rm -f /tmp/start_&name;
 </INLINE>
 </FILE>
 
@@ -316,9 +317,9 @@ else
     echo "checking network ups tools configuration..."
     at -M -f /tmp/start_&name; now 2>/dev/null
 
-    sleep 1
+    #sleep 5
 
-    rm -f /tmp/start_&name;
+    #rm -f /tmp/start_&name;
 
     # Cleaning old plugin source files
     find &plgPATH;/ -type f -iname "&name;-plugin*.txz" ! -iname "*&version;*" -delete
