@@ -3,7 +3,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nut">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.07.26">
+<!ENTITY version   "2023.08.26">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/master">
 <!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0.plg">
@@ -17,7 +17,8 @@
 
 <CHANGES>
 ##&name;
-###2023.07.26
+###2023.08.26
+ - Update packages to 2.8.0
 ###2023.07.26
 - fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
 - fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
@@ -189,12 +190,17 @@ dependency files
 <!--
 The 'nut-package' file.
 -->
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-1.txz" Min="6.10" Run="upgradepkg --install-new">
-<URL>&pkgURL;/nut-2.8.0-x86_64-1.txz</URL>
-<MD5>2c7a37ac49a3c752536b7f4f43777cc2</MD5>
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.13" >
+<URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl3.txz</URL>
+<MD5>f49b17d960920c6970ad3787a55811f6</MD5>
 </FILE>
 
-<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.10" Max="6.12.99" >
+<URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl11.txz</URL>
+<MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
+</FILE>
+
+<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Max ="6.9.99" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.7.4.20200318-x86_64-1.txz</URL>
 <MD5>52de2867d6b8f6bc1a98a45870b05420</MD5>
 </FILE>
@@ -248,6 +254,7 @@ fi
 if [ "$SERVICE" == "enable" ]; then
     /etc/rc.d/rc.nut start
 fi
+rm -f /tmp/start_&name;
 </INLINE>
 </FILE>
 
@@ -297,20 +304,19 @@ else
         ln -sf /var/run/upsmon.pid /var/run/nut/upsmon.pid
     fi
 
+    # Stop service
+    #echo "stopping services..."
+    #/etc/rc.d/rc.nut stop 2>/dev/null
+
+    # Upgrade Nut package to latest 2.8 
+    upgradepkg --install-new &plgPATH;/nut-2.8.0-x86_64-2.txz
+
     # upgrade plugin package
     upgradepkg --install-new &plgPATH;/&plgNAME;.txz
-
-    # Stop service
-    echo "stopping services..."
-    /etc/rc.d/rc.nut stop 2>/dev/null
 
     # start network ups tools
     echo "checking network ups tools configuration..."
     at -M -f /tmp/start_&name; now 2>/dev/null
-
-    sleep 1
-
-    rm -f /tmp/start_&name;
 
     # Cleaning old plugin source files
     find &plgPATH;/ -type f -iname "&name;-plugin*.txz" ! -iname "*&version;*" -delete
@@ -321,7 +327,8 @@ else
     echo " &name; has been installed."
     echo " Copyright 2015, macester"
     echo " Copyright 2020, gfjardim"
-    echo " Copyright 2015-2022, &author;"
+    echo " Copyright 2015-2022, Dmacias"
+    echo " Copyright 2022-2023, &author;"
     echo " Version: &version;"
     echo "-----------------------------------------------------------"
     echo ""
@@ -366,7 +373,8 @@ echo "-----------------------------------------------------------"
 echo " &name; has been removed."
 echo " Copyright 2015, macester"
 echo " Copyright 2020, gfjardim"
-echo " Copyright 2017-2022, &author;"
+echo " Copyright 2015-2022, Dmacias"
+echo " Copyright 2022-2023, &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
