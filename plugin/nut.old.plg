@@ -3,10 +3,10 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "nut">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2023.08.26">
+<!ENTITY version   "2023.07.26">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/master">
-<!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0.plg">
+<!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 <!ENTITY plgNAME   "&name;-plugin-&version;-x86_64-1">
@@ -18,9 +18,8 @@
 <CHANGES>
 ##&name;
 ###2023.07.26
-###2023.07.26
 - fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
-- fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
+- fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes to become active.
 - fix: old installation remnants cause updating or transitioning to another nut package on running instance to fail
 - fix: fix a permissions issue causing some drivers in 2.8.0 not to have access to their required folders
 - new: add button for users to be able to save their UPS details into a dummy-ups compliant diagnostics file
@@ -35,20 +34,20 @@
 - simplification of realpower/apparent power if value set manually
 - used   to separate number and unit (W/VA)
 - remove obsolete lowbatt fail-safe
-        Thanks to forum member Peuuuur Noel and Rysz for the PRs.
+	Thanks to forum member Peuuuur Noel and Rysz for the PRs.
 ###2023.07.23a
 - fix: updated code for better calculation and display (in settings/footer/dashboard) between apparent power, real/true power and data available from NUT
 - add: display power factor in settings page
 - add: use ups.realpower if available
 
-          Thanks to forum member Peuuuur Noel  for the PR.
+	  Thanks to forum member Peuuuur Noel  for the PR.
 ###2023.07.22
 - fix: persist config files when rebooting
 - add: implement lowbatt event fail-safe in settings
 - add: always pull-in latest config files on reinstall/upgrade
 - add: implement battery replacement notification in settings
 
-        Thanks to forum member Rysz for the PR.
+	Thanks to forum member Rysz for the PR.
 ###2023.06.03
 - Add Small footer style thanks ich777 for the PR.
 ###2023.02.14
@@ -189,17 +188,7 @@ dependency files
 <!--
 The 'nut-package' file.
 -->
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.13" >
-<URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl3.txz</URL>
-<MD5>f49b17d960920c6970ad3787a55811f6</MD5>
-</FILE>
-
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.10" Max="6.12.99" >
-<URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl11.txz</URL>
-<MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
-</FILE>
-
-<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Max ="6.9.99" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.7.4.20200318-x86_64-1.txz</URL>
 <MD5>52de2867d6b8f6bc1a98a45870b05420</MD5>
 </FILE>
@@ -214,17 +203,10 @@ The 'nut-package' file.
 <MD5>24702ef930855db3432ed9ee73e93d42</MD5>
 </FILE>
 
-<FILE Name="&plgPATH;/net-snmp-5.9.3-x86_64-1.txz" Min="6.10" Run="upgradepkg --install-new">
-<URL>&pkgURL;/net-snmp-5.9.3-x86_64-1.txz</URL>
-<MD5>5beebc819894c94bedbc531d47cfe497</MD5>
-</FILE>
-
 <FILE Name="&plgPATH;/net-snmp-5.7.3-x86_64-4.txz" Min="6.1" Run="upgradepkg --install-new">
 <URL>&pkgURL;/net-snmp-5.7.3-x86_64-4.txz</URL>
 <MD5>b9ef68216b97cb5f0bcd9f3312e5941e</MD5>
 </FILE>
-
-
 
 <!--
 The 'plugin' package file.
@@ -283,34 +265,12 @@ else
         /etc/rc.d/rc.nut stop 2>/dev/null
     fi
 
-    # nut-2.7.4 and nut plugin expects:
-    #   Config: /etc/nut
-    #   Pid   : /var/run/nut/upsmon.pid
-
-    # nut-2.8.0 expects
-    #   Config: /etc/ups
-    #   Pid   : /var/run/upsmon.pid
-
-    if [ ! -d /etc/nut ]; then
-        # Link nut-2.8.0 config to nut-2.7.4 config
-        mkdir /etc/nut
-        cp -f /etc/ups/* /etc/nut
-        rm -rf /etc/ups
-        ln -sf /etc/nut /etc/ups
-        # Link nut-2.7.4 pid to nut-2.8.0 pid
-        mkdir /var/run/nut
-        ln -sf /var/run/upsmon.pid /var/run/nut/upsmon.pid
-    fi
-
-    # Stop service
-    #echo "stopping services..."
-    #/etc/rc.d/rc.nut stop 2>/dev/null
-
-    # Upgrade Nut package to latest 2.8 
-    upgradepkg --install-new &plgPATH;/nut-2.8.0-x86_64-2.txz
-
     # upgrade plugin package
     upgradepkg --install-new &plgPATH;/&plgNAME;.txz
+
+    # Stop service
+    echo "stopping services..."
+    /etc/rc.d/rc.nut stop 2>/dev/null
 
     # start network ups tools
     echo "checking network ups tools configuration..."
@@ -329,8 +289,7 @@ else
     echo " &name; has been installed."
     echo " Copyright 2015, macester"
     echo " Copyright 2020, gfjardim"
-    echo " Copyright 2015-2022, Dmacias"
-    echo " Copyright 2022-2023, &author;"
+    echo " Copyright 2015-2022, &author;"
     echo " Version: &version;"
     echo "-----------------------------------------------------------"
     echo ""
@@ -359,11 +318,6 @@ rm -rf &plgPATH;/ups
 rm -f &plgPATH;/*.txz \
     &plgPATH;/*.md5
 
-# Remove links for nut-2.8.0 vs nut-2.7.4
-rm -rf /etc/nut
-rm -f /etc/ups
-rm -rf /var/run/nut
-
 # clean up folders after the removed installation
 # in case of re-installation of package on live system
 rm -rf /etc/nut
@@ -375,8 +329,7 @@ echo "-----------------------------------------------------------"
 echo " &name; has been removed."
 echo " Copyright 2015, macester"
 echo " Copyright 2020, gfjardim"
-echo " Copyright 2015-2022, Dmacias"
-echo " Copyright 2022-2023, &author;"
+echo " Copyright 2017-2022, &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
