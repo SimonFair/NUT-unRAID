@@ -189,12 +189,12 @@ dependency files
 <!--
 The 'nut-package' file.
 -->
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl3.txz" Min="6.13" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.13" >
 <URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl3.txz</URL>
 <MD5>f49b17d960920c6970ad3787a55811f6</MD5>
 </FILE>
 
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl11.txz" Min="6.10" Max="6.12.99" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.10" Max="6.12.99" >
 <URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl11.txz</URL>
 <MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
 </FILE>
@@ -302,12 +302,15 @@ else
         ln -sf /var/run/upsmon.pid /var/run/nut/upsmon.pid
     fi
 
-    # upgrade plugin package
-    upgradepkg --install-new &plgPATH;/&plgNAME;.txz
-
     # Stop service
     echo "stopping services..."
     /etc/rc.d/rc.nut stop 2>/dev/null
+
+    # Upgrade Nut package to latest 2.8 
+    upgradepkg --install-new &plgPATH;/nut-2.8.0-x86_64-2.txz
+
+    # upgrade plugin package
+    upgradepkg --install-new &plgPATH;/&plgNAME;.txz
 
     # start network ups tools
     echo "checking network ups tools configuration..."
@@ -326,7 +329,8 @@ else
     echo " &name; has been installed."
     echo " Copyright 2015, macester"
     echo " Copyright 2020, gfjardim"
-    echo " Copyright 2015-2022, &author;"
+    echo " Copyright 2015-2022, Dmacias"
+    echo " Copyright 2022-2023, &author;"
     echo " Version: &version;"
     echo "-----------------------------------------------------------"
     echo ""
@@ -371,7 +375,8 @@ echo "-----------------------------------------------------------"
 echo " &name; has been removed."
 echo " Copyright 2015, macester"
 echo " Copyright 2020, gfjardim"
-echo " Copyright 2017-2022, &author;"
+echo " Copyright 2015-2022, Dmacias"
+echo " Copyright 2022-2023, &author;"
 echo " Version: &version;"
 echo "-----------------------------------------------------------"
 echo ""
