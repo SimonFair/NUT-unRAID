@@ -183,6 +183,17 @@
 - Test Version (plg)
 </CHANGES>
 
+<FILE Run="/bin/bash">
+<INLINE>
+# if upgrading on live system, stop the services first
+# to release any remaining file locks before patching
+echo "Making sure all existing NUT services are stopped..."
+if [ -x /etc/rc.d/rc.nut ]; then
+    /etc/rc.d/rc.nut stop 2>/dev/null
+fi
+</INLINE>
+</FILE>
+
 <!--
 dependency files
 -->
@@ -190,17 +201,17 @@ dependency files
 <!--
 The 'nut-package' file.
 -->
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.13" >
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl3.txz" Min="6.13" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl3.txz</URL>
 <MD5>f49b17d960920c6970ad3787a55811f6</MD5>
 </FILE>
 
-<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.txz" Min="6.10" Max="6.12.99" >
+<FILE Name="&plgPATH;/nut-2.8.0-x86_64-2.ssl11.txz" Min="6.10" Max="6.12.99" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.8.0-x86_64-2.ssl11.txz</URL>
 <MD5>50c1fde33e3bb0fe398697bf1e212f75</MD5>
 </FILE>
 
-<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Max ="6.9.99" Run="upgradepkg --install-new">
+<FILE Name="&plgPATH;/nut-2.7.4.20200318-x86_64-1.txz" Min="6.8" Max="6.9.99" Run="upgradepkg --install-new">
 <URL>&pkgURL;/nut-2.7.4.20200318-x86_64-1.txz</URL>
 <MD5>52de2867d6b8f6bc1a98a45870b05420</MD5>
 </FILE>
@@ -277,12 +288,6 @@ if [ "${sum1:0:32}" != "${sum2:0:32}" ]; then
     rm -f &plgPATH;/&plgNAME;.md5
     exit 1
 else
-    # if upgrading on live system, stop the services here
-    # to release any remaining file locks before patching
-    if [ -x /etc/rc.d/rc.nut ]; then
-        /etc/rc.d/rc.nut stop 2>/dev/null
-    fi
-
     # nut-2.7.4 and nut plugin expects:
     #   Config: /etc/nut
     #   Pid   : /var/run/nut/upsmon.pid
@@ -301,13 +306,6 @@ else
         mkdir /var/run/nut
         ln -sf /var/run/upsmon.pid /var/run/nut/upsmon.pid
     fi
-
-    # Stop service
-    #echo "stopping services..."
-    #/etc/rc.d/rc.nut stop 2>/dev/null
-
-    # Upgrade Nut package to latest 2.8 
-    upgradepkg --install-new &plgPATH;/nut-2.8.0-x86_64-2.txz
 
     # upgrade plugin package
     upgradepkg --install-new &plgPATH;/&plgNAME;.txz
