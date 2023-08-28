@@ -6,7 +6,7 @@
 <!ENTITY version   "2023.08.26">
 <!ENTITY launch    "Settings/NUTsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/NUT-unRAID/master">
-<!ENTITY pluginURL "&gitURL;/plugin/&name;-2.8.0.plg">
+<!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 <!ENTITY plgNAME   "&name;-plugin-&version;-x86_64-1">
@@ -17,7 +17,8 @@
 
 <CHANGES>
 ##&name;
-###2023.07.26
+###2023.08.26
+ - Update packages to 2.8.0
 ###2023.07.26
 - fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
 - fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
@@ -224,8 +225,6 @@ The 'nut-package' file.
 <MD5>b9ef68216b97cb5f0bcd9f3312e5941e</MD5>
 </FILE>
 
-
-
 <!--
 The 'plugin' package file.
 -->
@@ -316,10 +315,6 @@ else
     # start network ups tools
     echo "checking network ups tools configuration..."
     at -M -f /tmp/start_&name; now 2>/dev/null
-
-    #sleep 5
-
-    #rm -f /tmp/start_&name;
 
     # Cleaning old plugin source files
     find &plgPATH;/ -type f -iname "&name;-plugin*.txz" ! -iname "*&version;*" -delete

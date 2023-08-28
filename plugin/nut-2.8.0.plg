@@ -17,7 +17,8 @@
 
 <CHANGES>
 ##&name;
-###2023.07.26
+###2023.08.26
+ - Update packages to 2.8.0
 ###2023.07.26
 - fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
 - fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
@@ -253,6 +254,7 @@ fi
 if [ "$SERVICE" == "enable" ]; then
     /etc/rc.d/rc.nut start
 fi
+rm -f /tmp/start_&name;
 </INLINE>
 </FILE>
 
@@ -315,10 +317,6 @@ else
     # start network ups tools
     echo "checking network ups tools configuration..."
     at -M -f /tmp/start_&name; now 2>/dev/null
-
-    sleep 1
-
-    rm -f /tmp/start_&name;
 
     # Cleaning old plugin source files
     find &plgPATH;/ -type f -iname "&name;-plugin*.txz" ! -iname "*&version;*" -delete
