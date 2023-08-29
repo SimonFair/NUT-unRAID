@@ -205,7 +205,7 @@ write_config() {
         mkdir $PLGPATH/ups
     fi
 	
-    cp -f /etc/nut/* $PLGPATH/ups >/dev/null 2>&1
+    cp -rf /etc/nut/* $PLGPATH/ups >/dev/null 2>&1
  
     # update permissions
     if [ -d /etc/nut ]; then

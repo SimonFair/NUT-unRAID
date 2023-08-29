@@ -17,7 +17,7 @@ chmod +0755 $DOCROOT/scripts/* \
         /usr/sbin/nut-notify
 
 # copy the default
-cp -nr $DOCROOT/default.cfg $BOOT/nut.cfg >/dev/null 2>&1
+cp -n $DOCROOT/default.cfg $BOOT/nut.cfg >/dev/null 2>&1
 
 # remove nut symlink
 if [ -L /etc/nut ]; then
@@ -39,7 +39,7 @@ fi
 cp -nr $DOCROOT/nut/* $BOOT/ups >/dev/null 2>&1
 
 # copy conf files from flash drive to local system, for our services to use
-cp -f $BOOT/ups/* /etc/nut >/dev/null 2>&1
+cp -rf $BOOT/ups/* /etc/nut >/dev/null 2>&1
 
 # update permissions
 if [ -d /etc/nut ]; then
