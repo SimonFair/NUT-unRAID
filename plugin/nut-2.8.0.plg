@@ -362,7 +362,6 @@ fi
 
 removepkg &plgPATH;/*.txz
 rm -rf &emhttp;
-rm -rf &plgPATH;/ups
 rm -f &plgPATH;/*.txz \
     &plgPATH;/*.md5
 
