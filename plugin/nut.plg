@@ -185,12 +185,16 @@
 
 <FILE Run="/bin/bash">
 <INLINE>
-# if upgrading on live system, stop the services first
-# to release any remaining file locks before patching
-echo "Making sure all existing NUT services are stopped..."
+echo "Making sure all existing NUT services are stopped (before install/upgrade)..."
 if [ -x /etc/rc.d/rc.nut ]; then
-    /etc/rc.d/rc.nut stop 2>/dev/null
+    if ! /etc/rc.d/rc.nut stop >/dev/null 2>&amp;1; then
+        echo "WARNING:"
+        echo "WARNING: The NUT installation script was not able to stop all services gracefully."
+        echo "WARNING: IN CASE OF PROBLEMS, please REBOOT YOUR SYSTEM to complete any upgrades."
+        echo "WARNING:"
+    fi 
 fi
+exit 0
 </INLINE>
 </FILE>
 
@@ -338,8 +342,15 @@ The 'remove' script.
 -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
-# Stop service
-/etc/rc.d/rc.nut stop 2>/dev/null
+echo "Making sure all existing NUT services are stopped (before uninstall)..."
+if [ -x /etc/rc.d/rc.nut ]; then
+    if ! /etc/rc.d/rc.nut stop >/dev/null 2>&amp;1; then
+        echo "WARNING:"
+        echo "WARNING: The NUT uninstallation script was not able to stop all services gracefully."
+        echo "WARNING: IN CASE OF PROBLEMS, please REBOOT YOUR SYSTEM to remove any remaining packages."
+        echo "WARNING:"
+    fi 
+fi
 
 # check if net-snmp is used by another plugin
 if [ `find /boot/config/plugins/*.plg -type f ! -iname "*&name;.plg*" | xargs grep "net-snmp" -sl` ]; then
@@ -349,7 +360,6 @@ fi
 
 removepkg &plgPATH;/*.txz
 rm -rf &emhttp;
-rm -rf &plgPATH;/ups
 rm -f &plgPATH;/*.txz \
     &plgPATH;/*.md5
 
