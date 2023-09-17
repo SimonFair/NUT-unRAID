@@ -18,7 +18,7 @@
 <CHANGES>
 ##&name;
 ###2023.09.17 
- - No function changes. Change to .plg to not remove ups config files to allow migration to Ryzs Version.
+ - No function changes. Change to .plg to not remove ups config files to allow migration to Rysz Version.
 ###2023.07.26
 - fix: reduce console spam of copy operations by redirecting output to /dev/null, as requested in 2023.07.21 #3 (comment)
 - fix: stop services before a plugin upgrade on the live system to remove any file locks preventing files from getting patched on the running instance. a reboot should now no longer be required for all changes>
